@@ -8,12 +8,12 @@ public class BookDto {
 
     private Long id;
 
-    @ToString.Exclude
-    private UserDto user;
-
     private String title;
 
     private String author;
 
     private long pageCount;
+
+    @ToString.Exclude
+    private UserDto user;
 }
