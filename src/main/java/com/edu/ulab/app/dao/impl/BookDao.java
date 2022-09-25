@@ -15,23 +15,23 @@ public class BookDao implements Dao<Book, Long> {
     private Storage storage;
 
     @Override
-    public Book add(Book entity) {
-        return storage.add(entity);
+    public Book add(Book book) {
+        return storage.add(book);
     }
 
     @Override
-    public Book update(Book entity) {
-        return storage.update(entity);
+    public Book update(Book book) {
+        return storage.update(book);
     }
 
     @Override
     public Optional<Book> findById(Long id) {
-        Object objectEntity = storage.findById(id, Book.class);
-        if (objectEntity == null) {
+        Object object = storage.findById(id, Book.class);
+        if (object == null) {
             return Optional.empty();
         }
-        Book bookEntity = (Book) objectEntity;
-        return Optional.of(bookEntity);
+        Book book = (Book) object;
+        return Optional.of(book);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.edu.ulab.app.dao.impl;
 
 import com.edu.ulab.app.dao.Dao;
-import com.edu.ulab.app.entity.User;
+import com.edu.ulab.app.entity.Person;
 import com.edu.ulab.app.storage.Storage;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -11,34 +11,34 @@ import java.util.Optional;
 
 @Component
 @AllArgsConstructor
-public class UserDao implements Dao<User, Long> {
+public class UserDao implements Dao<Person, Long> {
 
     private Storage storage;
 
     @Override
-    public User add(User userEntity) {
-        userEntity.setBooks(new ArrayList<>());
-        return storage.add(userEntity);
+    public Person add(Person person) {
+        person.setBooks(new ArrayList<>());
+        return storage.add(person);
     }
 
     @Override
-    public User update(User userEntity) {
-        userEntity.setBooks(new ArrayList<>());
-        return storage.update(userEntity);
+    public Person update(Person person) {
+        person.setBooks(new ArrayList<>());
+        return storage.update(person);
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        Object objectEntity = storage.findById(id, User.class);
-        if (objectEntity == null) {
+    public Optional<Person> findById(Long id) {
+        Object object = storage.findById(id, Person.class);
+        if (object == null) {
             return Optional.empty();
         }
-        User userEntity = (User) objectEntity;
-        return Optional.of(userEntity);
+        Person person = (Person) object;
+        return Optional.of(person);
     }
 
     @Override
     public void deleteById(Long id) {
-        storage.deleteById(id, User.class);
+        storage.deleteById(id, Person.class);
     }
 }
