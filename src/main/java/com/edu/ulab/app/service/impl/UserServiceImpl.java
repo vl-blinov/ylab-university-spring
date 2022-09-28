@@ -41,15 +41,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Long id) {
-        Person extractedUser = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User with id '" + id + "' is not found"));
+        Person extractedUser = extractPersonEntity(id);
         log.info("Extracted user: {}", extractedUser);
         return userMapper.userEntityToUserDto(extractedUser, new CycleAvoidingMappingContext());
     }
 
     @Override
     public void deleteUserById(Long id) {
-        getUserById(id);
+        extractPersonEntity(id);
         userRepository.deleteById(id);
+    }
+
+    private Person extractPersonEntity(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with id '" + id + "' is not found"));
     }
 }
