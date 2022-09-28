@@ -4,7 +4,9 @@ import com.edu.ulab.app.dto.BookDto;
 import com.edu.ulab.app.dto.UserDto;
 import com.edu.ulab.app.entity.Book;
 import com.edu.ulab.app.entity.Person;
+import com.edu.ulab.app.exception.NotFoundException;
 import com.edu.ulab.app.mapper.BookMapper;
+import com.edu.ulab.app.mapper.BookRowMapper;
 import com.edu.ulab.app.mapper.CycleAvoidingMappingContext;
 import com.edu.ulab.app.service.BookService;
 import com.edu.ulab.app.util.SqlConverter;
@@ -20,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -35,6 +38,7 @@ public class BookServiceImplTemplate implements BookService {
     private static final String SELECT_BOOK_WITH_USER_QUERY;
     private static final String SELECT_BOOKS_QUERY;
     private static final String DELETE_BOOK_QUERY;
+    private static final String SELECT_BOOK_QUERY;
 
     static {
         INSERT_BOOK_QUERY = SqlConverter.loadResourceToString("queries/insertBookQuery.sql");
@@ -42,6 +46,7 @@ public class BookServiceImplTemplate implements BookService {
         SELECT_BOOK_WITH_USER_QUERY = SqlConverter.loadResourceToString("queries/selectBookWithUserQuery.sql");
         SELECT_BOOKS_QUERY = SqlConverter.loadResourceToString("queries/selectBooksQuery.sql");
         DELETE_BOOK_QUERY = SqlConverter.loadResourceToString("queries/deleteBookQuery.sql");
+        SELECT_BOOK_QUERY = SqlConverter.loadResourceToString("queries/selectBookQuery.sql");
     }
 
     @Override
@@ -57,7 +62,11 @@ public class BookServiceImplTemplate implements BookService {
                     ps.setLong(4, bookDto.getUser().getId());
                     return ps;
                 }, keyHolder);
-        bookDto.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+        Number key = Optional
+                .ofNullable(keyHolder.getKey())
+                .orElseThrow(() ->
+                        new RuntimeException("KeyHolder does not contain a key. The key has not been generated."));
+        bookDto.setId(key.longValue());
         return bookDto;
     }
 
@@ -93,25 +102,20 @@ public class BookServiceImplTemplate implements BookService {
                     extractedBook.setPageCount(rs.getLong("PAGE_COUNT_B"));
                 }, id);
 
-        List<Book> books = jdbcTemplate.query(
-                SELECT_BOOKS_QUERY,
-                ((rs, rowNum) -> {
-                    Book book = new Book();
-                    book.setId(rs.getLong("ID"));
-                    book.setTitle(rs.getString("TITLE"));
-                    book.setAuthor(rs.getString("AUTHOR"));
-                    book.setPageCount(rs.getLong("PAGE_COUNT"));
-                    return book;
-                }), extractedUser.getId());
+        Optional.ofNullable(extractedBook.getId())
+                .orElseThrow(() -> new NotFoundException("Book with id '" + id + "' is not found."));
+
+        List<Book> books = jdbcTemplate.query(SELECT_BOOKS_QUERY, new BookRowMapper(), extractedUser.getId());
 
         List<BookDto> bookDtoList = books
                 .stream()
-                .peek(book -> Objects.requireNonNull(extractedUser).addBook(book))
+                .filter(Objects::nonNull)
+                .peek(extractedUser::addBook)
                 .map(book -> bookMapper.bookEntityToBookDto(book, new CycleAvoidingMappingContext()))
                 .toList();
 
         UserDto userDto = new UserDto();
-        userDto.setId(Objects.requireNonNull(extractedUser).getId());
+        userDto.setId(extractedUser.getId());
         userDto.setFullName(extractedUser.getFullName());
         userDto.setTitle(extractedUser.getTitle());
         userDto.setAge(extractedUser.getAge());
@@ -129,6 +133,10 @@ public class BookServiceImplTemplate implements BookService {
 
     @Override
     public void deleteBookById(Long id) {
+        List<Book> books = jdbcTemplate.query(SELECT_BOOK_QUERY, new BookRowMapper(), id);
+        books.stream()
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Book with id '" + id + "' is not found."));
         jdbcTemplate.update(DELETE_BOOK_QUERY, id);
     }
 }
