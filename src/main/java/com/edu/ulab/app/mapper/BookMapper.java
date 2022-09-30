@@ -3,7 +3,10 @@ package com.edu.ulab.app.mapper;
 import com.edu.ulab.app.dto.BookDto;
 import com.edu.ulab.app.entity.Book;
 import com.edu.ulab.app.web.request.BookRequest;
+import org.mapstruct.Context;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface BookMapper {
@@ -12,7 +15,9 @@ public interface BookMapper {
 
     BookRequest bookDtoToBookRequest(BookDto bookDto);
 
-    Book bookDtoToBookEntity(BookDto bookDto);
+    @Mapping(source = "user", target = "user")
+    Book bookDtoToBookEntity(BookDto bookDto, @Context CycleAvoidingMappingContext context);
 
-    BookDto bookEntityToBookDto(Book bookEntity);
+    @InheritInverseConfiguration
+    BookDto bookEntityToBookDto(Book bookEntity, @Context CycleAvoidingMappingContext context);
 }

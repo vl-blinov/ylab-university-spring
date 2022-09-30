@@ -1,47 +1,59 @@
 package com.edu.ulab.app.service.impl;
 
-import com.edu.ulab.app.dao.impl.UserDao;
 import com.edu.ulab.app.dto.UserDto;
-import com.edu.ulab.app.entity.User;
+import com.edu.ulab.app.entity.Person;
 import com.edu.ulab.app.exception.NotFoundException;
+import com.edu.ulab.app.mapper.CycleAvoidingMappingContext;
 import com.edu.ulab.app.mapper.UserMapper;
+import com.edu.ulab.app.repository.UserRepository;
 import com.edu.ulab.app.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@Qualifier("userServiceJpa")
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserDao userDao;
+    private UserRepository userRepository;
     private UserMapper userMapper;
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        User newUserEntity = userMapper.userDtoToUserEntity(userDto);
-        User createdUserEntity = userDao.add(newUserEntity);
-        return userMapper.userEntityToUserDto(createdUserEntity);
+        Person user = userMapper.userDtoToUserEntity(userDto, new CycleAvoidingMappingContext());
+        log.info("Mapped user: {}", user);
+        Person createdUser = userRepository.save(user);
+        log.info("Created user: {}", createdUser);
+        return userMapper.userEntityToUserDto(createdUser, new CycleAvoidingMappingContext());
     }
 
     @Override
     public UserDto updateUser(UserDto userDto) {
-        User updatingUserEntity = userMapper.userDtoToUserEntity(userDto);
-        User updatedUserEntity = userDao.update(updatingUserEntity);
-        return userMapper.userEntityToUserDto(updatedUserEntity);
+        Person user = userMapper.userDtoToUserEntity(userDto, new CycleAvoidingMappingContext());
+        log.info("Mapped user: {}", user);
+        Person updatedUser = userRepository.save(user);
+        log.info("Updated user: {}", updatedUser);
+        return userMapper.userEntityToUserDto(updatedUser, new CycleAvoidingMappingContext());
     }
 
     @Override
     public UserDto getUserById(Long id) {
-        User extractedUserEntity = userDao.findById(id)
-                .orElseThrow(() -> new NotFoundException("User with id '" + id + "' is not found"));
-        return userMapper.userEntityToUserDto(extractedUserEntity);
+        Person extractedUser = extractPersonEntity(id);
+        log.info("Extracted user: {}", extractedUser);
+        return userMapper.userEntityToUserDto(extractedUser, new CycleAvoidingMappingContext());
     }
 
     @Override
     public void deleteUserById(Long id) {
-        getUserById(id);
-        userDao.deleteById(id);
+        extractPersonEntity(id);
+        userRepository.deleteById(id);
+    }
+
+    private Person extractPersonEntity(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with id '" + id + "' is not found"));
     }
 }

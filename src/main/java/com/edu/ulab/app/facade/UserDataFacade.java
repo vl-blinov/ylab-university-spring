@@ -9,21 +9,31 @@ import com.edu.ulab.app.service.UserService;
 import com.edu.ulab.app.web.request.UserBookRequest;
 import com.edu.ulab.app.web.response.UserBookResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
 @Slf4j
 @Component
+@Transactional
 public class UserDataFacade {
+
     private final UserService userService;
     private final BookService bookService;
     private final UserMapper userMapper;
     private final BookMapper bookMapper;
 
-    public UserDataFacade(UserService userService,
-                          BookService bookService,
+    /*
+     * @Qualifier(userServiceJpa) - UserServiceImpl with UserRepository.
+     * @Qualifier(userServiceJdbc) - UserServiceImplTemplate with JdbcTemplate.
+     * @Qualifier(bookServiceJpa) - BookServiceImpl with BookRepository.
+     * @Qualifier(bookServiceJdbc) - BookServiceImplTemplate with JdbcTemplate.
+     */
+    public UserDataFacade(@Qualifier("userServiceJpa") UserService userService,
+                          @Qualifier("bookServiceJpa") BookService bookService,
                           UserMapper userMapper,
                           BookMapper bookMapper) {
         this.userService = userService;
@@ -68,7 +78,7 @@ public class UserDataFacade {
                 .filter(Objects::nonNull)
                 .map(bookMapper::bookRequestToBookDto)
                 .peek(bookDto -> bookDto.setUser(user))
-                .peek(mappedBookDto -> log.info("mapped book: {}", mappedBookDto))
+                .peek(mappedBookDto -> log.info("Mapped book: {}", mappedBookDto))
                 .map(bookService::createBook)
                 .peek(createdBook -> log.info("Created book: {}", createdBook))
                 .map(BookDto::getId)

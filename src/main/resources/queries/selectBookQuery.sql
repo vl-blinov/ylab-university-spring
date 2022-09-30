@@ -1,0 +1,3 @@
+SELECT *
+FROM BOOK
+WHERE ID = ?
