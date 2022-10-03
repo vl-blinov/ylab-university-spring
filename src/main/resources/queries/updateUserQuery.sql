@@ -1,3 +1,0 @@
-UPDATE PERSON
-SET FULL_NAME = ?, TITLE = ?, AGE = ?
-WHERE ID = ?
