@@ -3,6 +3,7 @@ package com.edu.ulab.app.service.impl;
 import com.edu.ulab.app.dto.UserDto;
 import com.edu.ulab.app.entity.Person;
 import com.edu.ulab.app.exception.NotFoundException;
+import com.edu.ulab.app.exception.UniqueViolationException;
 import com.edu.ulab.app.mapper.CycleAvoidingMappingContext;
 import com.edu.ulab.app.mapper.UserMapper;
 import com.edu.ulab.app.repository.UserRepository;
@@ -23,6 +24,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
+        String title = userDto.getTitle();
+        if (userRepository.existsByTitle(title)) {
+            throw new UniqueViolationException("User with title '" + title + "' already exists.");
+        }
         Person user = userMapper.userDtoToUserEntity(userDto, new CycleAvoidingMappingContext());
         log.info("Mapped user: {}", user);
         Person createdUser = userRepository.save(user);
