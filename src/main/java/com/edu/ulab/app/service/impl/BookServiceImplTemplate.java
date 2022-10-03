@@ -41,12 +41,12 @@ public class BookServiceImplTemplate implements BookService {
     private static final String SELECT_BOOK_QUERY;
 
     static {
-        INSERT_BOOK_QUERY = SqlConverter.loadResourceToString("queries/insertBookQuery.sql");
-        UPDATE_BOOK_QUERY = SqlConverter.loadResourceToString("queries/updateBookQuery.sql");
-        SELECT_BOOK_WITH_USER_QUERY = SqlConverter.loadResourceToString("queries/selectBookWithUserQuery.sql");
-        SELECT_BOOKS_QUERY = SqlConverter.loadResourceToString("queries/selectBooksQuery.sql");
-        DELETE_BOOK_QUERY = SqlConverter.loadResourceToString("queries/deleteBookQuery.sql");
-        SELECT_BOOK_QUERY = SqlConverter.loadResourceToString("queries/selectBookQuery.sql");
+        INSERT_BOOK_QUERY = SqlConverter.loadResourceToString("db/queries/insertBookQuery.sql");
+        UPDATE_BOOK_QUERY = SqlConverter.loadResourceToString("db/queries/updateBookQuery.sql");
+        SELECT_BOOK_WITH_USER_QUERY = SqlConverter.loadResourceToString("db/queries/selectBookWithUserQuery.sql");
+        SELECT_BOOKS_QUERY = SqlConverter.loadResourceToString("db/queries/selectBooksQuery.sql");
+        DELETE_BOOK_QUERY = SqlConverter.loadResourceToString("db/queries/deleteBookQuery.sql");
+        SELECT_BOOK_QUERY = SqlConverter.loadResourceToString("db/queries/selectBookQuery.sql");
     }
 
     @Override
@@ -90,16 +90,16 @@ public class BookServiceImplTemplate implements BookService {
         jdbcTemplate.query(
                 SELECT_BOOK_WITH_USER_QUERY,
                 rs -> {
-                    extractedUser.setId(rs.getLong("ID_P"));
-                    extractedUser.setFullName(rs.getString("FULL_NAME_P"));
-                    extractedUser.setTitle(rs.getString("TITLE_P"));
-                    extractedUser.setAge(rs.getInt("AGE_P"));
+                    extractedUser.setId(rs.getLong("id_p"));
+                    extractedUser.setFullName(rs.getString("full_name_p"));
+                    extractedUser.setTitle(rs.getString("title_p"));
+                    extractedUser.setAge(rs.getInt("age_p"));
                     extractedUser.setBooks(new ArrayList<>());
 
-                    extractedBook.setId(rs.getLong("ID_B"));
-                    extractedBook.setTitle(rs.getString("TITLE_B"));
-                    extractedBook.setAuthor(rs.getString("AUTHOR_B"));
-                    extractedBook.setPageCount(rs.getLong("PAGE_COUNT_B"));
+                    extractedBook.setId(rs.getLong("id_b"));
+                    extractedBook.setTitle(rs.getString("title_b"));
+                    extractedBook.setAuthor(rs.getString("author_b"));
+                    extractedBook.setPageCount(rs.getLong("page_count_b"));
                 }, id);
 
         Optional.ofNullable(extractedBook.getId())
