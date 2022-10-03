@@ -12,10 +12,10 @@ public class BookRowMapper implements RowMapper<Book> {
 
         Book book = new Book();
 
-        book.setId(rs.getLong("ID"));
-        book.setTitle(rs.getString("TITLE"));
-        book.setAuthor(rs.getString("AUTHOR"));
-        book.setPageCount(rs.getLong("PAGE_COUNT"));
+        book.setId(rs.getLong("id"));
+        book.setTitle(rs.getString("title"));
+        book.setAuthor(rs.getString("author"));
+        book.setPageCount(rs.getLong("page_count"));
 
         return book;
     }

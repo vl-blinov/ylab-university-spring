@@ -13,10 +13,10 @@ public class UserRowMapper implements RowMapper<Person> {
 
         Person user = new Person();
 
-        user.setId(rs.getLong("ID"));
-        user.setFullName(rs.getString("FULL_NAME"));
-        user.setTitle(rs.getString("TITLE"));
-        user.setAge(rs.getInt("AGE"));
+        user.setId(rs.getLong("id"));
+        user.setFullName(rs.getString("full_name"));
+        user.setTitle(rs.getString("title"));
+        user.setAge(rs.getInt("age"));
         user.setBooks(new ArrayList<>());
 
         return user;
