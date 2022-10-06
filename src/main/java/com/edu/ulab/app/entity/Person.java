@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
+@Table(name = "person", schema = "ulab_edu")
 public class Person {
 
     @Id
@@ -19,12 +20,15 @@ public class Person {
     private Long id;
 
     @NotBlank
+    @Column(nullable = false)
     private String fullName;
-
+    
     @NotBlank
+    @Column(nullable = false)
     private String title;
 
     @NotNull
+    @Column(nullable = false)
     private int age;
 
     @ToString.Exclude

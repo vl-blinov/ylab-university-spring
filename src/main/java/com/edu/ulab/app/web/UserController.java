@@ -57,7 +57,8 @@ public class UserController {
                                     
                                     Returns a user book response.""",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = UserBookResponse.class)))})
+                                    schema = @Schema(implementation = UserBookResponse.class))),
+                        @ApiResponse(responseCode = "400", description = "Bad request: 'title' is not unique.", content = @Content)})
     public UserBookResponse createUserWithBooks(@RequestBody UserBookRequest request,
                                                 @RequestHeader(RQID) @Pattern(regexp = REQUEST_ID_PATTERN) final String requestId) {
         UserBookResponse response = userDataFacade.createUserWithBooks(request);

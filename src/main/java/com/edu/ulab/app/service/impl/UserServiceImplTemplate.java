@@ -41,12 +41,12 @@ public class UserServiceImplTemplate implements UserService {
     private static final String DELETE_USER_QUERY;
 
     static {
-        INSERT_USER_QUERY = SqlConverter.loadResourceToString("queries/insertUserQuery.sql");
-        UPDATE_USER_QUERY = SqlConverter.loadResourceToString("queries/updateUserQuery.sql");
-        SELECT_USER_QUERY = SqlConverter.loadResourceToString("queries/selectUserQuery.sql");
-        SELECT_BOOKS_QUERY = SqlConverter.loadResourceToString("queries/selectBooksQuery.sql");
-        DELETE_BOOKS_QUERY = SqlConverter.loadResourceToString("queries/deleteBooksQuery.sql");
-        DELETE_USER_QUERY = SqlConverter.loadResourceToString("queries/deleteUserQuery.sql");
+        INSERT_USER_QUERY = SqlConverter.loadResourceToString("db/queries/insertUserQuery.sql");
+        UPDATE_USER_QUERY = SqlConverter.loadResourceToString("db/queries/updateUserQuery.sql");
+        SELECT_USER_QUERY = SqlConverter.loadResourceToString("db/queries/selectUserQuery.sql");
+        SELECT_BOOKS_QUERY = SqlConverter.loadResourceToString("db/queries/selectBooksQuery.sql");
+        DELETE_BOOKS_QUERY = SqlConverter.loadResourceToString("db/queries/deleteBooksQuery.sql");
+        DELETE_USER_QUERY = SqlConverter.loadResourceToString("db/queries/deleteUserQuery.sql");
     }
 
     @Override
