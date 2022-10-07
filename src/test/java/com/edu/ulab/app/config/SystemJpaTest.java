@@ -14,7 +14,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Аннотация для системного тестирования запросов JPA.
+ * Annotation for system testing of JPA requests.
  */
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
