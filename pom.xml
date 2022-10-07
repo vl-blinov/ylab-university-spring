@@ -25,8 +25,8 @@
         <javax.validation.version>2.0.0.Alpha1</javax.validation.version>
         <springdoc-openapi-ui.version>1.6.11</springdoc-openapi-ui.version>
         <liquidbase.version>4.16.1</liquidbase.version>
-        <test.containers.version>1.17.3</test.containers.version>
-        <postgres.test-containers.version>1.17.3</postgres.test-containers.version>
+        <test.containers.version>1.17.4</test.containers.version>
+        <postgres.test-containers.version>1.17.4</postgres.test-containers.version>
     </properties>
 
     <dependencies>
