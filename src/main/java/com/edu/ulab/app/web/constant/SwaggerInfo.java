@@ -5,11 +5,11 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class SwaggerInfo {
     /**
-     * Название API.
+     * API title.
      */
     public final String TITLE = "Service";
     /**
-     * Описание API.
+     * API description.
      */
-    public final String DESCRIPTION = "Сервис";
+    public final String DESCRIPTION = "Service";
 }
